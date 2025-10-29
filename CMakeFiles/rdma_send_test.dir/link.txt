@@ -1,0 +1,1 @@
+/usr/bin/cc -O3 -DNDEBUG -rdynamic CMakeFiles/rdma_send_test.dir/src/req_test/send_test.c.o CMakeFiles/rdma_send_test.dir/src/common/common.c.o -o bin/rdma_send_test  -lpthread -libverbs -lrdmacm 

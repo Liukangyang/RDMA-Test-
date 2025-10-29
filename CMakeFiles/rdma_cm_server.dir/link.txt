@@ -1,0 +1,1 @@
+/usr/bin/cc -O3 -DNDEBUG -rdynamic CMakeFiles/rdma_cm_server.dir/src/req_test/rdma_cm/rdma_cm_server.c.o CMakeFiles/rdma_cm_server.dir/src/common/rdma_common.c.o -o bin/rdma_cm_server  -lpthread -libverbs -lrdmacm 

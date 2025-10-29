@@ -1,0 +1,1 @@
+/usr/bin/cc -O3 -DNDEBUG -rdynamic CMakeFiles/rdma_wite_test.dir/src/req_test/write_test.c.o CMakeFiles/rdma_wite_test.dir/src/req_test/common.c.o -o bin/rdma_wite_test  -lpthread -libverbs -lrdmacm 

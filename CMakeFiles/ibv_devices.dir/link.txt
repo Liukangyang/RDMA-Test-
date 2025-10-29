@@ -1,0 +1,1 @@
+/usr/bin/cc -O3 -DNDEBUG -rdynamic CMakeFiles/ibv_devices.dir/src/device/ibv_devices_test.c.o -o bin/ibv_devices  -lpthread -libverbs -lrdmacm 

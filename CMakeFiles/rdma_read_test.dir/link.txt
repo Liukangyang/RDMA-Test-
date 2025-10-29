@@ -1,0 +1,1 @@
+/usr/bin/cc -O3 -DNDEBUG -rdynamic CMakeFiles/rdma_read_test.dir/src/req_test/read_test.c.o CMakeFiles/rdma_read_test.dir/src/common/common.c.o -o bin/rdma_read_test  -lpthread -libverbs -lrdmacm 
