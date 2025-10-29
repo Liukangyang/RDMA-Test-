@@ -33,13 +33,31 @@ struct  pingpong_context {
 };
 
 
+/*
+User-specified wr_id
+*/
 enum WR_ID{
 	RECV_WRID = 1,
     SEND_WRID = 2,
+    SEND_IMMDT_WRID,
 	WRITE_WRID,
+    WRITE_IMMDT_WRID,
 	READ_WRID,
-	ATOMIC_WRID
+	ATOMIC_COMSWAP_WRID,
+    ATOMIC_FETCHADD_WRID
 };
+
+
+enum RDMA_OPS{
+    SEND = 1,
+    SEND_IMMDT,
+	WRITE,
+    WRITE_IMMDT,
+	READ,
+	ATOMIC_COMSWAP,
+    ATOMIC_FETCHADD
+};
+
 
 
 void printMsg(const char*fmt,...);
@@ -99,4 +117,6 @@ struct pingpong_dest *server_exch_dest_unidirect(struct pingpong_context *ctx,
 						 const struct pingpong_dest *my_dest,
 						 int sgid_idx);
 
+
+int handle_cqe(const struct pingpong_context *ctx,const struct ibv_wc* wc);
 #endif

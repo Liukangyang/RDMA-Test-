@@ -306,16 +306,16 @@ int post_atomic(struct pingpong_context *ctx,struct pingpong_dest *rem_dest,int 
             .lkey = ctx->mr->lkey
         };
 
-		if(atomic_type != IBV_WR_ATOMIC_CMP_AND_SWP && atomic_type != IBV_WR_ATOMIC_FETCH_AND_ADD){
+		if(atomic_type != ATOMIC_COMSWAP && atomic_type != ATOMIC_FETCHADD){
 			fprintf(stderr,"Unknown atomic type error\n");
 			return 1;
 		}
         struct ibv_send_wr send_wr = {
-            .wr_id = ATOMIC_WRID,
+            .wr_id = atomic_type + 1,
             .next = NULL,
             .sg_list = &sge_list,
             .num_sge = 1,
-			.opcode = atomic_type,
+			.opcode = (atomic_type==ATOMIC_COMSWAP?IBV_WR_ATOMIC_CMP_AND_SWP:IBV_WR_ATOMIC_FETCH_AND_ADD),
             .send_flags = ctx->send_flags,
 			.wr.atomic.remote_addr = rem_dest->buf_addr,
 			.wr.atomic.rkey = rem_dest->buf_rkey,
@@ -324,11 +324,9 @@ int post_atomic(struct pingpong_context *ctx,struct pingpong_dest *rem_dest,int 
 		va_list args;
 		va_start(args,atomic_type);
 
-		if(atomic_type == IBV_WR_ATOMIC_CMP_AND_SWP){   //comp-swap类型：需要指定compare和swap字段
-			send_wr.wr.atomic.compare_add = va_arg(args,uint64_t);
+		send_wr.wr.atomic.compare_add = va_arg(args,uint64_t);
+		if(atomic_type == ATOMIC_COMSWAP){
 			send_wr.wr.atomic.swap = va_arg(args,uint64_t);
-		}else if(atomic_type == IBV_WR_ATOMIC_FETCH_AND_ADD){ //fetch-add类型，只需要指定add字段
-			send_wr.wr.atomic.compare_add = va_arg(args,uint64_t);
 		}
 
 		va_end(args);
@@ -949,6 +947,60 @@ void gid_to_wire_gid(const union ibv_gid *gid, char wgid[])
 }
 
 
+//处理WC
+int handle_cqe(const struct pingpong_context *ctx,const struct ibv_wc* wc){
+	 		int status = wc->status;
+            uint64_t wr_id = wc->wr_id;
+            int opcode = wc->opcode;
+
+            if(status != IBV_WC_SUCCESS){
+                fprintf(stderr, "Failed status %s (%d) for wr_id %d\n",
+						ibv_wc_status_str(status),
+						status, (int)wr_id);
+                return -1;
+            }
+
+            //处理不同的事件类型
+            switch((int)wr_id){
+                case RECV_WRID:
+				if(opcode == IBV_WC_RECV_RDMA_WITH_IMM || opcode == IBV_WC_RECV){//imm_data at reciver
+                    //获取imma_data
+                    uint32_t imm_data = ntohl(wc->imm_data);
+                    printMsg("Server receive immdt_data:%d\n",imm_data);
+					//打印数据
+					printMsg("Server receive data :%s\n",(char *)ctx->buf);
+                }
+                break;
+				//client
+				case SEND_IMMDT_WRID:
+				case SEND_WRID:
+				printMsg("Client completes send request\n");
+				break;
+				
+				case WRITE_IMMDT_WRID:
+                case WRITE_WRID:
+				printMsg("Client completes write request\n");
+				break;
+
+			    case READ_WRID:
+				printMsg("Client receive data:%s \n",(char *)ctx->buf);
+				printMsg("Client completes read request\n");
+				break;
+
+				case ATOMIC_COMSWAP_WRID:
+				case ATOMIC_FETCHADD_WRID:
+				//打印atomic数据
+				printMsg("Server memory original data:%ld\n",*(uint64_t *)ctx->buf);
+				printMsg("Client completes atomic request\n");
+				break;
+
+				default:
+				 fprintf(stderr,"Unknown wr_id error\n");
+				 return -1;
+			}
+
+			return 0;
+}
 
 
 

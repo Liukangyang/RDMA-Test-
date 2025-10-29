@@ -37,5 +37,8 @@ add_executable(rdma_atomic_test ${PROJECT_SOURCE_DIR}/req_test/atomic_test.c ${P
 add_executable(rdma_cm_client ${PROJECT_SOURCE_DIR}/req_test/rdma_cm/rdma_cm_client.c ${PROJECT_SOURCE_DIR}/common/rdma_common.c)
 add_executable(rdma_cm_server ${PROJECT_SOURCE_DIR}/req_test/rdma_cm/rdma_cm_server.c ${PROJECT_SOURCE_DIR}/common/rdma_common.c)
 
+add_executable(rdma_client ${PROJECT_SOURCE_DIR}/req_test/rdma_client.c ${PROJECT_SOURCE_DIR}/common/common.c)
+add_executable(rdma_server ${PROJECT_SOURCE_DIR}/req_test/rdma_server.c ${PROJECT_SOURCE_DIR}/common/common.c)
+
 add_executable(ibv_devices ${PROJECT_SOURCE_DIR}/device/ibv_devices_test.c)
 add_executable(ibv_devinfo ${PROJECT_SOURCE_DIR}/device/ibv_devinfo_test.c)

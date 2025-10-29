@@ -19,7 +19,8 @@
         "inet.h": "c",
         "rdma_commom.h": "c",
         "string.h": "c",
-        "time_t.h": "c"
+        "time_t.h": "c",
+        "getopt.h": "c"
     },
     "CodeFree.index": true
 }

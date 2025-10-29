@@ -40,14 +40,7 @@ static void usage(const char *argv0)
 	printf("  -g, --gid-idx=<gid index> local port gid index\n");
 	printf("  -o, --odp		    use on demand paging\n");
 	printf("  -t, --ts	            get CQE with timestamp\n");
-	printf("  -c, --client	        whether client or server\n");
     printf("  -a, --address=<ip-addr>	 server ip address\n");
-    printf("  -M, --server memory data=<data>	 server memory data\n");
-    printf("  -A, --atomic type=<number>	 atomic type number\n");
-    printf("      1:Compare_and_swap\n");
-    printf("      2:Fetch_and_add\n");
-    printf("      -C, --atomic_comp_data=<data>	 compare/add data\n");
-    printf("      -S, --atomic_swap_data=<data>	 swap data\n");
     printf("  -h, --help   	         display help information\n");
     printf("==================================================================\n");
 }
@@ -81,12 +74,10 @@ int main(int argc, char *argv[]){
 	uint64_t		 comp_recv_prev_time = 0;
 	int			 last_comp_with_ts = 0;
 	unsigned int		 comp_with_time_iters = 0;
-    int client = 0;
 
-	int atomic_type = 0;
-	uint64_t Com_add_data = 1234;
-	uint64_t Swap_data = 4321;
-	uint64_t memory_data = 1234;
+	int immdt_flag = 0;
+	uint64_t immdt_data = 0;
+
 	srand48(getpid() * time(NULL));
 
     //读取命令行参数
@@ -103,20 +94,15 @@ int main(int argc, char *argv[]){
 			{ .name = "gid-idx",  .has_arg = 1, .val = 'g' },
 			{ .name = "odp",      .has_arg = 0, .val = 'o' },
 			{ .name = "ts",       .has_arg = 0, .val = 't' },
-            { .name = "client",   .has_arg = 0, .val = 'c' },  //client or server
             { .name = "addr",     .has_arg = 1, .val = 'a'},   //server-ip-addr(用于socket建链)
-			{ .name = "atomic-type", .has_arg = 1, .val = 'A'},
-			{ .name = "compare/add data", .has_arg = 1, .val = 'C'},
-			{ .name = "swap data", .has_arg = 1, .val = 'S'},
-			{ .name = "memory data", .has_arg = 1, .val = 'M'},
-            { .name = "help",     .has_arg = 0, .val = 'h'},
+			{ .name = "help",     .has_arg = 0, .val = 'h'},
 			{ 0 }
 		};
 
     int c;
     while(1){
 
-        c = getopt_long(argc, argv, "p:d:i:s:m:r:n:l:eg:otca:A:C:S:M:h",
+        c = getopt_long(argc, argv, "p:d:i:s:m:r:n:l:eg:ota:h",
 				long_options, NULL);
 
         if(c == -1)
@@ -181,28 +167,9 @@ int main(int argc, char *argv[]){
 		case 't':
 			use_ts = 1;
             break;
-        case 'c':  //client or server
-            client = 1;
-            break;
         case 'a':
             servername = strdup(optarg); //hostname or ip-address
             break;
-		case 'A':
-			atomic_type = atoi(optarg);
-			if(atomic_type!=1 && atomic_type!=2){
-				fprintf(stderr,"Unknown atomic operation type!\n");
-				return 1;
-			}
-			break;
-		case 'C':
-			Com_add_data = strtol(optarg,NULL,0);
-			break;
-		case 'S':
-			Swap_data = strtol(optarg,NULL,0);
-			break;
-		case 'M':
-			memory_data = strtol(optarg,NULL,0);
-			break;
         case 'h':
 		default:
 			usage(argv[0]);
@@ -235,18 +202,20 @@ int main(int argc, char *argv[]){
 
     //2.初始化
     //printMsg("ctx init\n");
-    int access_flags;
-    if(client){
-        access_flags = IBV_ACCESS_LOCAL_WRITE;
-    }else
-        access_flags = IBV_ACCESS_LOCAL_WRITE | IBV_ACCESS_REMOTE_ATOMIC;
-    ctx = init_ctx(ib_dev, size,rx_depth, ib_port,use_event,access_flags,IBV_ACCESS_REMOTE_ATOMIC);
+    int access_flags = IBV_ACCESS_LOCAL_WRITE | 
+                        IBV_ACCESS_REMOTE_WRITE | 
+                        IBV_ACCESS_REMOTE_READ || 
+                        IB_UVERBS_ACCESS_REMOTE_ATOMIC;
+    ctx = init_ctx(ib_dev, size,rx_depth, ib_port,use_event,access_flags,IBV_ACCESS_REMOTE_WRITE | 
+                                                                          IBV_ACCESS_REMOTE_READ |   
+                                                                          IB_UVERBS_ACCESS_REMOTE_ATOMIC);
 
     if(!ctx){
         fprintf(stderr,"Init ERROR!\n");
         return 1;
     }
 
+	//预下发recv wr
 	routs = post_recv(ctx,ctx->rx_depth);
     if (routs < ctx->rx_depth) {
 		fprintf(stderr, "Couldn't post receive (%d)\n", routs);
@@ -292,18 +261,9 @@ int main(int argc, char *argv[]){
 	printf("  local address:  LID 0x%04x, QPN 0x%06x, PSN 0x%06x, GID %s,addr 0x%08x,rkey 0x%06x\n",
 	       my_dest.lid, my_dest.qpn, my_dest.psn, gid , my_dest.buf_addr,my_dest.buf_rkey);
 
-    //服务端存储数据(添加服务端指定数据)============================
-    if(!client){
-        memcpy(ctx->buf,&memory_data,sizeof memory_data);
-    }
     //3.socket建链
-    if(client){  //客户端
-       // printMsg("RDMA role:client\n");
-        rem_dest = client_exch_dest_unidirect(servername,port,&my_dest);    
-    }else{ //服务端
-      //  printMsg("RDMA role:server\n");
-        rem_dest = server_exch_dest_unidirect(ctx,ib_port,mtu,port,sl,&my_dest,gidx);
-    }
+    rem_dest = server_exch_dest_unidirect(ctx,ib_port,mtu,port,sl,&my_dest,gidx);
+
     if(!rem_dest){
         printMsg("Couldn't get peer info!\n");
         return 1;
@@ -316,20 +276,7 @@ int main(int argc, char *argv[]){
 	       rem_dest->lid, rem_dest->qpn, rem_dest->psn, gid,rem_dest->buf_addr,rem_dest->buf_rkey);
 #endif
 
-    //4. 修改客户端的状态
-    if(client){
-        if(pp_connect_ctx(ctx, ib_port, my_dest.psn, mtu, sl, rem_dest,gidx)){
-            fprintf(stderr, "Couldn't connect to remote QP\n");
-            free(rem_dest);
-            rem_dest = NULL;
-            return 1;
-        }
-#ifdef DEBUG_INFO
-		printMsg("Client modify QP successfully!\n");
-#endif
-    }
 
-    
     //请求通知
 	if(use_event){
 		if(ibv_req_notify_cq(ctx->cq,0)){
@@ -337,30 +284,6 @@ int main(int argc, char *argv[]){
 			return 1;
 		}
 	}    
-
-    //6.post client
-    if(client){
-		//printMsg("post write req\n");
-		if(atomic_type == 1){
-			atomic_type = ATOMIC_COMSWAP;
-		}else if(atomic_type == 2){
-			atomic_type = ATOMIC_FETCHADD;
-		}else{
-			fprintf(stderr,"Unknown atomic type error\n");
-			return 1;
-		}
-        if(post_atomic(ctx,rem_dest,atomic_type,Com_add_data,Swap_data)){
-            fprintf(stderr, "Couldn't post send\n");
-			return 1;
-        }
-        //ctx->pending |= ATOMIC_WRID; 
-		
-		//记录开始时间
-		if (gettimeofday(&start, NULL)) {
-			perror("gettimeofday");
-			return 1;
-		}
-    }
 
     //获取完成事件通知(阻塞)
 	if(use_event){
@@ -382,10 +305,8 @@ int main(int argc, char *argv[]){
 			fprintf(stderr, "Couldn't request CQ notification\n");
 			return 1;
 		}
-	
 	}
 
-    scnt = rcnt = 0;
     //7.poll cq
     int ne = 0;
 	struct ibv_wc wc;
@@ -402,78 +323,13 @@ int main(int argc, char *argv[]){
 		else if(ne == 0){
 			goto timeout;
 		}
-		
-		//ne>0解析CQE
-		int i;
-        enum ibv_wc_status       status;
-        enum ibv_wc_opcode	opcode;
-		uint64_t                 wr_id;
-		//记录完成时间
-		if (gettimeofday(&end, NULL)) {
-			perror("gettimeofday");
-			return 1;
-		}
-        for(i = 0;i < ne;i++){
-            status = wc.status;
-            wr_id = wc.wr_id;
-            opcode = wc.opcode;
-
-            if(status != IBV_WC_SUCCESS){
-                fprintf(stderr, "Failed status %s (%d) for wr_id %d\n",
-						ibv_wc_status_str(status),
-						status, (int)wr_id);
-                return 1;
-            }
-			printMsg("WC_State:%s\n",ibv_wc_status_str(status));
-
-            //判断事件类型
-            switch((int)wr_id){
-                case SEND_WRID:
-                if(opcode == IBV_WC_SEND)
-                    scnt++;
-				double usec = (end.tv_sec*1000000+end.tv_usec)-(start.tv_sec*1000000+start.tv_usec);//时间单位us
-                printMsg("Send req complete for %.4f us\n",usec);
-				break;
-
-                case RECV_WRID:
-				if(opcode == IBV_WC_RECV_RDMA_WITH_IMM){//imm_data at reciver
-                    rcnt++;
-                    //获取imma_data
-                    uint32_t imm_data = ntohl(wc.imm_data);
-                    printMsg("recv immdt:%d\n",imm_data);
-                }
-                break;
-
-                case WRITE_WRID:
-                if(opcode == IBV_WC_RDMA_WRITE){
-                    scnt++;
-				    double usec = (end.tv_sec*1000000+end.tv_usec)-(start.tv_sec*1000000+start.tv_usec);//时间单位us
-                    printMsg("Send req complete for %.4f us\n",usec);
-
-                }
-				break;
-
-                case ATOMIC_COMSWAP_WRID:
-				case ATOMIC_FETCHADD_WRID:
-                if(opcode == IBV_WC_COMP_SWAP || opcode == IBV_WC_FETCH_ADD){
-                    printMsg("Remote memory origin data:%ld",*(uint64_t *)ctx->buf);
-                }else{
-                    fprintf(stderr,"Unknown WC opcode\n");
-                }
-				default:
-
-            }
-        }   
+		//ne>0,handle cqe
+        handle_cqe(ctx,&wc);   
 timeout:
 		//超时退出
 		gettimeofday(&poll_curtime,NULL);
 		time = ((poll_curtime.tv_sec * 1000000 + poll_curtime.tv_usec) - (poll_starttime.tv_sec * 1000000 + poll_starttime.tv_usec)) / 1000000;
     }while(time < 2);
-
-    //服务端打印数据
-    if(!client){
-        printMsg("server old data:%ld,final data:%ld\n",memory_data,*(uint64_t *)ctx->buf);
-    }
 
     if(use_event){
 		//确认cqe
@@ -491,3 +347,15 @@ timeout:
     return 0;
 
 }
+
+
+
+
+
+
+
+
+
+
+
+

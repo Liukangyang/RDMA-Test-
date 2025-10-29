@@ -49,6 +49,8 @@ set(CMAKE_DEPEND_INFO_FILES
   "CMakeFiles/rdma_atomic_test.dir/DependInfo.cmake"
   "CMakeFiles/rdma_cm_client.dir/DependInfo.cmake"
   "CMakeFiles/rdma_cm_server.dir/DependInfo.cmake"
+  "CMakeFiles/rdma_client.dir/DependInfo.cmake"
+  "CMakeFiles/rdma_server.dir/DependInfo.cmake"
   "CMakeFiles/ibv_devices.dir/DependInfo.cmake"
   "CMakeFiles/ibv_devinfo.dir/DependInfo.cmake"
   )

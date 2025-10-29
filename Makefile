@@ -195,6 +195,32 @@ rdma_cm_server/fast:
 .PHONY : rdma_cm_server/fast
 
 #=============================================================================
+# Target rules for targets named rdma_client
+
+# Build rule for target.
+rdma_client: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 rdma_client
+.PHONY : rdma_client
+
+# fast build rule for target.
+rdma_client/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/rdma_client.dir/build.make CMakeFiles/rdma_client.dir/build
+.PHONY : rdma_client/fast
+
+#=============================================================================
+# Target rules for targets named rdma_server
+
+# Build rule for target.
+rdma_server: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 rdma_server
+.PHONY : rdma_server
+
+# fast build rule for target.
+rdma_server/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/rdma_server.dir/build.make CMakeFiles/rdma_server.dir/build
+.PHONY : rdma_server/fast
+
+#=============================================================================
 # Target rules for targets named ibv_devices
 
 # Build rule for target.
@@ -229,6 +255,8 @@ src/common/common.c.o:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/rdma_write_test.dir/build.make CMakeFiles/rdma_write_test.dir/src/common/common.c.o
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/rdma_read_test.dir/build.make CMakeFiles/rdma_read_test.dir/src/common/common.c.o
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/rdma_atomic_test.dir/build.make CMakeFiles/rdma_atomic_test.dir/src/common/common.c.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/rdma_client.dir/build.make CMakeFiles/rdma_client.dir/src/common/common.c.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/rdma_server.dir/build.make CMakeFiles/rdma_server.dir/src/common/common.c.o
 .PHONY : src/common/common.c.o
 
 src/common/common.i: src/common/common.c.i
@@ -240,6 +268,8 @@ src/common/common.c.i:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/rdma_write_test.dir/build.make CMakeFiles/rdma_write_test.dir/src/common/common.c.i
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/rdma_read_test.dir/build.make CMakeFiles/rdma_read_test.dir/src/common/common.c.i
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/rdma_atomic_test.dir/build.make CMakeFiles/rdma_atomic_test.dir/src/common/common.c.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/rdma_client.dir/build.make CMakeFiles/rdma_client.dir/src/common/common.c.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/rdma_server.dir/build.make CMakeFiles/rdma_server.dir/src/common/common.c.i
 .PHONY : src/common/common.c.i
 
 src/common/common.s: src/common/common.c.s
@@ -251,6 +281,8 @@ src/common/common.c.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/rdma_write_test.dir/build.make CMakeFiles/rdma_write_test.dir/src/common/common.c.s
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/rdma_read_test.dir/build.make CMakeFiles/rdma_read_test.dir/src/common/common.c.s
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/rdma_atomic_test.dir/build.make CMakeFiles/rdma_atomic_test.dir/src/common/common.c.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/rdma_client.dir/build.make CMakeFiles/rdma_client.dir/src/common/common.c.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/rdma_server.dir/build.make CMakeFiles/rdma_server.dir/src/common/common.c.s
 .PHONY : src/common/common.c.s
 
 src/common/rdma_common.o: src/common/rdma_common.c.o
@@ -352,6 +384,30 @@ src/req_test/atomic_test.c.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/rdma_atomic_test.dir/build.make CMakeFiles/rdma_atomic_test.dir/src/req_test/atomic_test.c.s
 .PHONY : src/req_test/atomic_test.c.s
 
+src/req_test/rdma_client.o: src/req_test/rdma_client.c.o
+.PHONY : src/req_test/rdma_client.o
+
+# target to build an object file
+src/req_test/rdma_client.c.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/rdma_client.dir/build.make CMakeFiles/rdma_client.dir/src/req_test/rdma_client.c.o
+.PHONY : src/req_test/rdma_client.c.o
+
+src/req_test/rdma_client.i: src/req_test/rdma_client.c.i
+.PHONY : src/req_test/rdma_client.i
+
+# target to preprocess a source file
+src/req_test/rdma_client.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/rdma_client.dir/build.make CMakeFiles/rdma_client.dir/src/req_test/rdma_client.c.i
+.PHONY : src/req_test/rdma_client.c.i
+
+src/req_test/rdma_client.s: src/req_test/rdma_client.c.s
+.PHONY : src/req_test/rdma_client.s
+
+# target to generate assembly for a file
+src/req_test/rdma_client.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/rdma_client.dir/build.make CMakeFiles/rdma_client.dir/src/req_test/rdma_client.c.s
+.PHONY : src/req_test/rdma_client.c.s
+
 src/req_test/rdma_cm/rdma_cm_client.o: src/req_test/rdma_cm/rdma_cm_client.c.o
 .PHONY : src/req_test/rdma_cm/rdma_cm_client.o
 
@@ -399,6 +455,30 @@ src/req_test/rdma_cm/rdma_cm_server.s: src/req_test/rdma_cm/rdma_cm_server.c.s
 src/req_test/rdma_cm/rdma_cm_server.c.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/rdma_cm_server.dir/build.make CMakeFiles/rdma_cm_server.dir/src/req_test/rdma_cm/rdma_cm_server.c.s
 .PHONY : src/req_test/rdma_cm/rdma_cm_server.c.s
+
+src/req_test/rdma_server.o: src/req_test/rdma_server.c.o
+.PHONY : src/req_test/rdma_server.o
+
+# target to build an object file
+src/req_test/rdma_server.c.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/rdma_server.dir/build.make CMakeFiles/rdma_server.dir/src/req_test/rdma_server.c.o
+.PHONY : src/req_test/rdma_server.c.o
+
+src/req_test/rdma_server.i: src/req_test/rdma_server.c.i
+.PHONY : src/req_test/rdma_server.i
+
+# target to preprocess a source file
+src/req_test/rdma_server.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/rdma_server.dir/build.make CMakeFiles/rdma_server.dir/src/req_test/rdma_server.c.i
+.PHONY : src/req_test/rdma_server.c.i
+
+src/req_test/rdma_server.s: src/req_test/rdma_server.c.s
+.PHONY : src/req_test/rdma_server.s
+
+# target to generate assembly for a file
+src/req_test/rdma_server.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/rdma_server.dir/build.make CMakeFiles/rdma_server.dir/src/req_test/rdma_server.c.s
+.PHONY : src/req_test/rdma_server.c.s
 
 src/req_test/read_test.o: src/req_test/read_test.c.o
 .PHONY : src/req_test/read_test.o
@@ -483,10 +563,12 @@ help:
 	@echo "... ibv_devices"
 	@echo "... ibv_devinfo"
 	@echo "... rdma_atomic_test"
+	@echo "... rdma_client"
 	@echo "... rdma_cm_client"
 	@echo "... rdma_cm_server"
 	@echo "... rdma_read_test"
 	@echo "... rdma_send_test"
+	@echo "... rdma_server"
 	@echo "... rdma_write_test"
 	@echo "... src/common/common.o"
 	@echo "... src/common/common.i"
@@ -503,12 +585,18 @@ help:
 	@echo "... src/req_test/atomic_test.o"
 	@echo "... src/req_test/atomic_test.i"
 	@echo "... src/req_test/atomic_test.s"
+	@echo "... src/req_test/rdma_client.o"
+	@echo "... src/req_test/rdma_client.i"
+	@echo "... src/req_test/rdma_client.s"
 	@echo "... src/req_test/rdma_cm/rdma_cm_client.o"
 	@echo "... src/req_test/rdma_cm/rdma_cm_client.i"
 	@echo "... src/req_test/rdma_cm/rdma_cm_client.s"
 	@echo "... src/req_test/rdma_cm/rdma_cm_server.o"
 	@echo "... src/req_test/rdma_cm/rdma_cm_server.i"
 	@echo "... src/req_test/rdma_cm/rdma_cm_server.s"
+	@echo "... src/req_test/rdma_server.o"
+	@echo "... src/req_test/rdma_server.i"
+	@echo "... src/req_test/rdma_server.s"
 	@echo "... src/req_test/read_test.o"
 	@echo "... src/req_test/read_test.i"
 	@echo "... src/req_test/read_test.s"

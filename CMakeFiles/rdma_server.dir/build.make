@@ -69,44 +69,44 @@ include CMakeFiles/rdma_server.dir/progress.make
 # Include the compile flags for this target's objects.
 include CMakeFiles/rdma_server.dir/flags.make
 
-CMakeFiles/rdma_server.dir/src/req_test/rdma_cm/rdma_server.c.o: CMakeFiles/rdma_server.dir/flags.make
-CMakeFiles/rdma_server.dir/src/req_test/rdma_cm/rdma_server.c.o: src/req_test/rdma_cm/rdma_server.c
-CMakeFiles/rdma_server.dir/src/req_test/rdma_cm/rdma_server.c.o: CMakeFiles/rdma_server.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/liuky/RDMA/Test/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building C object CMakeFiles/rdma_server.dir/src/req_test/rdma_cm/rdma_server.c.o"
-	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT CMakeFiles/rdma_server.dir/src/req_test/rdma_cm/rdma_server.c.o -MF CMakeFiles/rdma_server.dir/src/req_test/rdma_cm/rdma_server.c.o.d -o CMakeFiles/rdma_server.dir/src/req_test/rdma_cm/rdma_server.c.o -c /home/liuky/RDMA/Test/src/req_test/rdma_cm/rdma_server.c
+CMakeFiles/rdma_server.dir/src/req_test/rdma_server.c.o: CMakeFiles/rdma_server.dir/flags.make
+CMakeFiles/rdma_server.dir/src/req_test/rdma_server.c.o: src/req_test/rdma_server.c
+CMakeFiles/rdma_server.dir/src/req_test/rdma_server.c.o: CMakeFiles/rdma_server.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/liuky/RDMA/Test/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building C object CMakeFiles/rdma_server.dir/src/req_test/rdma_server.c.o"
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT CMakeFiles/rdma_server.dir/src/req_test/rdma_server.c.o -MF CMakeFiles/rdma_server.dir/src/req_test/rdma_server.c.o.d -o CMakeFiles/rdma_server.dir/src/req_test/rdma_server.c.o -c /home/liuky/RDMA/Test/src/req_test/rdma_server.c
 
-CMakeFiles/rdma_server.dir/src/req_test/rdma_cm/rdma_server.c.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/rdma_server.dir/src/req_test/rdma_cm/rdma_server.c.i"
-	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/liuky/RDMA/Test/src/req_test/rdma_cm/rdma_server.c > CMakeFiles/rdma_server.dir/src/req_test/rdma_cm/rdma_server.c.i
+CMakeFiles/rdma_server.dir/src/req_test/rdma_server.c.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/rdma_server.dir/src/req_test/rdma_server.c.i"
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/liuky/RDMA/Test/src/req_test/rdma_server.c > CMakeFiles/rdma_server.dir/src/req_test/rdma_server.c.i
 
-CMakeFiles/rdma_server.dir/src/req_test/rdma_cm/rdma_server.c.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/rdma_server.dir/src/req_test/rdma_cm/rdma_server.c.s"
-	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/liuky/RDMA/Test/src/req_test/rdma_cm/rdma_server.c -o CMakeFiles/rdma_server.dir/src/req_test/rdma_cm/rdma_server.c.s
+CMakeFiles/rdma_server.dir/src/req_test/rdma_server.c.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/rdma_server.dir/src/req_test/rdma_server.c.s"
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/liuky/RDMA/Test/src/req_test/rdma_server.c -o CMakeFiles/rdma_server.dir/src/req_test/rdma_server.c.s
 
-CMakeFiles/rdma_server.dir/src/common/rdma_common.c.o: CMakeFiles/rdma_server.dir/flags.make
-CMakeFiles/rdma_server.dir/src/common/rdma_common.c.o: src/common/rdma_common.c
-CMakeFiles/rdma_server.dir/src/common/rdma_common.c.o: CMakeFiles/rdma_server.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/liuky/RDMA/Test/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building C object CMakeFiles/rdma_server.dir/src/common/rdma_common.c.o"
-	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT CMakeFiles/rdma_server.dir/src/common/rdma_common.c.o -MF CMakeFiles/rdma_server.dir/src/common/rdma_common.c.o.d -o CMakeFiles/rdma_server.dir/src/common/rdma_common.c.o -c /home/liuky/RDMA/Test/src/common/rdma_common.c
+CMakeFiles/rdma_server.dir/src/common/common.c.o: CMakeFiles/rdma_server.dir/flags.make
+CMakeFiles/rdma_server.dir/src/common/common.c.o: src/common/common.c
+CMakeFiles/rdma_server.dir/src/common/common.c.o: CMakeFiles/rdma_server.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/liuky/RDMA/Test/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building C object CMakeFiles/rdma_server.dir/src/common/common.c.o"
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT CMakeFiles/rdma_server.dir/src/common/common.c.o -MF CMakeFiles/rdma_server.dir/src/common/common.c.o.d -o CMakeFiles/rdma_server.dir/src/common/common.c.o -c /home/liuky/RDMA/Test/src/common/common.c
 
-CMakeFiles/rdma_server.dir/src/common/rdma_common.c.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/rdma_server.dir/src/common/rdma_common.c.i"
-	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/liuky/RDMA/Test/src/common/rdma_common.c > CMakeFiles/rdma_server.dir/src/common/rdma_common.c.i
+CMakeFiles/rdma_server.dir/src/common/common.c.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/rdma_server.dir/src/common/common.c.i"
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/liuky/RDMA/Test/src/common/common.c > CMakeFiles/rdma_server.dir/src/common/common.c.i
 
-CMakeFiles/rdma_server.dir/src/common/rdma_common.c.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/rdma_server.dir/src/common/rdma_common.c.s"
-	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/liuky/RDMA/Test/src/common/rdma_common.c -o CMakeFiles/rdma_server.dir/src/common/rdma_common.c.s
+CMakeFiles/rdma_server.dir/src/common/common.c.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/rdma_server.dir/src/common/common.c.s"
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/liuky/RDMA/Test/src/common/common.c -o CMakeFiles/rdma_server.dir/src/common/common.c.s
 
 # Object files for target rdma_server
 rdma_server_OBJECTS = \
-"CMakeFiles/rdma_server.dir/src/req_test/rdma_cm/rdma_server.c.o" \
-"CMakeFiles/rdma_server.dir/src/common/rdma_common.c.o"
+"CMakeFiles/rdma_server.dir/src/req_test/rdma_server.c.o" \
+"CMakeFiles/rdma_server.dir/src/common/common.c.o"
 
 # External object files for target rdma_server
 rdma_server_EXTERNAL_OBJECTS =
 
-bin/rdma_server: CMakeFiles/rdma_server.dir/src/req_test/rdma_cm/rdma_server.c.o
-bin/rdma_server: CMakeFiles/rdma_server.dir/src/common/rdma_common.c.o
+bin/rdma_server: CMakeFiles/rdma_server.dir/src/req_test/rdma_server.c.o
+bin/rdma_server: CMakeFiles/rdma_server.dir/src/common/common.c.o
 bin/rdma_server: CMakeFiles/rdma_server.dir/build.make
 bin/rdma_server: /usr/lib/x86_64-linux-gnu/libibverbs.so
 bin/rdma_server: /usr/lib/x86_64-linux-gnu/librdmacm.so

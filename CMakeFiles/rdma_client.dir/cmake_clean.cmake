@@ -1,8 +1,8 @@
 file(REMOVE_RECURSE
-  "CMakeFiles/rdma_client.dir/src/common/rdma_common.c.o"
-  "CMakeFiles/rdma_client.dir/src/common/rdma_common.c.o.d"
-  "CMakeFiles/rdma_client.dir/src/req_test/rdma_cm/rdma_client.c.o"
-  "CMakeFiles/rdma_client.dir/src/req_test/rdma_cm/rdma_client.c.o.d"
+  "CMakeFiles/rdma_client.dir/src/common/common.c.o"
+  "CMakeFiles/rdma_client.dir/src/common/common.c.o.d"
+  "CMakeFiles/rdma_client.dir/src/req_test/rdma_client.c.o"
+  "CMakeFiles/rdma_client.dir/src/req_test/rdma_client.c.o.d"
   "bin/rdma_client"
   "bin/rdma_client.pdb"
 )

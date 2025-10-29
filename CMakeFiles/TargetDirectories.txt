@@ -4,6 +4,8 @@
 /home/liuky/RDMA/Test/CMakeFiles/rdma_atomic_test.dir
 /home/liuky/RDMA/Test/CMakeFiles/rdma_cm_client.dir
 /home/liuky/RDMA/Test/CMakeFiles/rdma_cm_server.dir
+/home/liuky/RDMA/Test/CMakeFiles/rdma_client.dir
+/home/liuky/RDMA/Test/CMakeFiles/rdma_server.dir
 /home/liuky/RDMA/Test/CMakeFiles/ibv_devices.dir
 /home/liuky/RDMA/Test/CMakeFiles/ibv_devinfo.dir
 /home/liuky/RDMA/Test/CMakeFiles/edit_cache.dir

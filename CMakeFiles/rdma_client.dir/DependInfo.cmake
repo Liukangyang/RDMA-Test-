@@ -8,8 +8,8 @@ set(CMAKE_DEPENDS_LANGUAGES
 
 # The set of dependency files which are needed:
 set(CMAKE_DEPENDS_DEPENDENCY_FILES
-  "/home/liuky/RDMA/Test/src/common/rdma_common.c" "CMakeFiles/rdma_client.dir/src/common/rdma_common.c.o" "gcc" "CMakeFiles/rdma_client.dir/src/common/rdma_common.c.o.d"
-  "/home/liuky/RDMA/Test/src/req_test/rdma_cm/rdma_client.c" "CMakeFiles/rdma_client.dir/src/req_test/rdma_cm/rdma_client.c.o" "gcc" "CMakeFiles/rdma_client.dir/src/req_test/rdma_cm/rdma_client.c.o.d"
+  "/home/liuky/RDMA/Test/src/common/common.c" "CMakeFiles/rdma_client.dir/src/common/common.c.o" "gcc" "CMakeFiles/rdma_client.dir/src/common/common.c.o.d"
+  "/home/liuky/RDMA/Test/src/req_test/rdma_client.c" "CMakeFiles/rdma_client.dir/src/req_test/rdma_client.c.o" "gcc" "CMakeFiles/rdma_client.dir/src/req_test/rdma_client.c.o.d"
   )
 
 # Targets to which this target links.
