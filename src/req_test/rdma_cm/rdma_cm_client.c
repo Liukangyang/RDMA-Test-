@@ -680,17 +680,24 @@ int main(int argc, char **argv) {
 		return ret;
 	}
 
-	//3.客户端与服务端建立连接并交换元信息
+	//3.客户端发起连接
+	ret = client_connect_to_server();
+	if(ret){
+		rdma_error("Failed to connect to remote host , errno: %d\n", -errno);
+		return -errno;	
+	}
+
+	//4.客户端与服务端建立连接并交换元信息
 	ret = client_xchange_metadata_with_server();
 	if (ret) {
 		rdma_error("Failed to setup client connection , ret = %d \n", ret);
 		return ret;
 	}
 
-	//4.客户端下发请求
+	//5.客户端下发请求
 	/*可修改为更通用的函数调用，使其支持不同的RDMA操作*/
 	//ret = client_remote_memory_ops();
-
+  
 	ret = client_remote_memory_ops(ops_type);
 	if(ret){
 		rdma_error("Failed to finish remote memory ops, ret = %d \n", ret);
