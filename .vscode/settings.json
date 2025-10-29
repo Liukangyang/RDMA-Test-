@@ -1,0 +1,25 @@
+{
+    "files.associations": {
+        "verbs.h": "c",
+        "arch.h": "c",
+        "socket.h": "c",
+        "malloc.h": "c",
+        "stdio.h": "c",
+        "stdlib.h": "c",
+        "stdarg.h": "c",
+        "send_test.h": "c",
+        "types.h": "c",
+        "unistd.h": "c",
+        "netdb.h": "c",
+        "floatn.h": "c",
+        "in.h": "c",
+        "common.h": "c",
+        "uintn-identity.h": "c",
+        "time.h": "c",
+        "inet.h": "c",
+        "rdma_commom.h": "c",
+        "string.h": "c",
+        "time_t.h": "c"
+    },
+    "CodeFree.index": true
+}

@@ -298,7 +298,6 @@ int post_read(struct pingpong_context *ctx,struct pingpong_dest *rem_dest){
 }
 
 //下发atomic请求
-/*修改为可选参数列表*/
 int post_atomic(struct pingpong_context *ctx,struct pingpong_dest *rem_dest,int atomic_type,...){
 	    //ATOMIC-ACK返回数据的存放地
 		struct ibv_sge sge_list = {

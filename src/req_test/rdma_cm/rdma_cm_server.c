@@ -286,18 +286,6 @@ static int send_server_metadata_to_client()
 	show_rdma_buffer_attr(&client_metadata_attr);
 	printf("The client has requested buffer length of : %u bytes \n", 
 			client_metadata_attr.length);
-	/* We need to setup requested memory buffer. This is where the client will 
-	* do RDMA READs and WRITEs. */
-       server_buffer_mr = rdma_buffer_alloc(pd /* which protection domain */, 
-		       client_metadata_attr.length /* what size to allocate */, 
-		       (IBV_ACCESS_LOCAL_WRITE|
-		       IBV_ACCESS_REMOTE_READ|
-		       IBV_ACCESS_REMOTE_WRITE) /* access permissions */);
-       if(!server_buffer_mr){
-	       rdma_error("Server failed to create a buffer \n");
-	       /* we assume that it is due to out of memory error */
-	       return -ENOMEM;
-       }
        /* This buffer is used to transmit information about the above 
 	* buffer to the client. So this contains the metadata about the server 
 	* buffer. Hence this is called metadata buffer. Since this is already 
@@ -423,6 +411,47 @@ void usage()
 }
 
 
+//预下发post请求
+int pre_post_recv(int n){
+	int ret = -1,i;
+		/* We need to setup requested memory buffer. This is where the client will 
+	* do RDMA READs and WRITEs. */
+       server_buffer_mr = rdma_buffer_alloc(pd /* which protection domain */, 
+		       client_metadata_attr.length /* what size to allocate */, 
+		       (IBV_ACCESS_LOCAL_WRITE|
+		       IBV_ACCESS_REMOTE_READ|
+		       IBV_ACCESS_REMOTE_WRITE | 
+			   IBV_ACCESS_REMOTE_ATOMIC) /* access permissions */);
+       if(!server_buffer_mr){
+	       rdma_error("Server failed to create a buffer \n");
+	       /* we assume that it is due to out of memory error */
+	       return -ENOMEM;
+       }
+
+	/* We pre-post this receive buffer on the QP. SGE credentials is where we 
+	 * receive the metadata from the client */
+	client_recv_sge.addr = (uint64_t) server_buffer_mr->addr; // same as &client_buffer_attr
+	client_recv_sge.length = server_buffer_mr->length;
+	client_recv_sge.lkey = server_buffer_mr->lkey;
+	/* Now we link this SGE to the work request (WR) */
+	bzero(&client_recv_wr, sizeof(client_recv_wr));
+    client_recv_wr.wr_id = RECV_WRID;
+	client_recv_wr.sg_list = &client_recv_sge;
+	client_recv_wr.num_sge = 1; // only one SGE
+
+	//下发n个相同的recv请求
+	for (i = 0; i < n; i++) {
+		ret = ibv_post_recv(client_qp /* which QP */,
+				&client_recv_wr /* receive work request*/,
+				&bad_client_recv_wr /* error WRs */);
+		if (ret) {
+			rdma_error("Failed to pre-post the receive buffer, errno: %d \n", ret);
+			return ret;
+		}
+	}
+	return 0;
+}
+
 int main(int argc, char **argv){
 	int ret, option;
 	struct sockaddr_in server_sockaddr;
@@ -479,7 +508,11 @@ int main(int argc, char **argv){
      }
 
      //pre-post recv
-     //ret = pre_post_recv();
+     ret = pre_post_recv(5);
+	 if(ret){
+		rdma_error("Failed to pre-post recv cleanly, ret = %d \n", ret);
+		return ret;
+	 }
 
      //4.连接建立后，与客户端交换元数据信息
      ret = send_server_metadata_to_client();
