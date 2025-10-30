@@ -40,7 +40,6 @@ static void usage(const char *argv0)
 	printf("  -g, --gid-idx=<gid index> local port gid index\n");
 	printf("  -o, --odp		    use on demand paging\n");
 	printf("  -t, --ts	            get CQE with timestamp\n");
-    printf("  -a, --address=<ip-addr>	 server ip address\n");
     printf("  -h, --help   	         display help information\n");
     printf("==================================================================\n");
 }
@@ -94,7 +93,6 @@ int main(int argc, char *argv[]){
 			{ .name = "gid-idx",  .has_arg = 1, .val = 'g' },
 			{ .name = "odp",      .has_arg = 0, .val = 'o' },
 			{ .name = "ts",       .has_arg = 0, .val = 't' },
-            { .name = "addr",     .has_arg = 1, .val = 'a'},   //server-ip-addr(用于socket建链)
 			{ .name = "help",     .has_arg = 0, .val = 'h'},
 			{ 0 }
 		};
@@ -167,9 +165,6 @@ int main(int argc, char *argv[]){
 		case 't':
 			use_ts = 1;
             break;
-        case 'a':
-            servername = strdup(optarg); //hostname or ip-address
-            break;
         case 'h':
 		default:
 			usage(argv[0]);
@@ -204,7 +199,7 @@ int main(int argc, char *argv[]){
     //printMsg("ctx init\n");
     int access_flags = IBV_ACCESS_LOCAL_WRITE | 
                         IBV_ACCESS_REMOTE_WRITE | 
-                        IBV_ACCESS_REMOTE_READ || 
+                        IBV_ACCESS_REMOTE_READ | 
                         IB_UVERBS_ACCESS_REMOTE_ATOMIC;
     ctx = init_ctx(ib_dev, size,rx_depth, ib_port,use_event,access_flags,IBV_ACCESS_REMOTE_WRITE | 
                                                                           IBV_ACCESS_REMOTE_READ |   
@@ -261,6 +256,10 @@ int main(int argc, char *argv[]){
 	printf("  local address:  LID 0x%04x, QPN 0x%06x, PSN 0x%06x, GID %s,addr 0x%08x,rkey 0x%06x\n",
 	       my_dest.lid, my_dest.qpn, my_dest.psn, gid , my_dest.buf_addr,my_dest.buf_rkey);
 
+	
+
+	//对于read请求，可设置服务端内存的数据
+	//sprintf((char *)ctx->buf,"Server read test data\n");
     //3.socket建链
     rem_dest = server_exch_dest_unidirect(ctx,ib_port,mtu,port,sl,&my_dest,gidx);
 
@@ -289,7 +288,7 @@ int main(int argc, char *argv[]){
 	if(use_event){
 		struct ibv_cq *ev_cq;
 		void          *ev_ctx;		
-		if(ibv_get_cq_event(ctx->channel,&ev_cq,&ev_ctx)){
+		if(ibv_get_cq_event(ctx->channel,&ev_cq,&ev_ctx)){ //阻塞操作
 				fprintf(stderr, "Failed to get cq_event\n");
 				return 1;
 		}
@@ -331,6 +330,8 @@ timeout:
 		time = ((poll_curtime.tv_sec * 1000000 + poll_curtime.tv_usec) - (poll_starttime.tv_sec * 1000000 + poll_starttime.tv_usec)) / 1000000;
     }while(time < 2);
 
+	//服务端打印接收数据
+	printMsg("The data at server side is :string format :%s,number format:%ld\n",(char *)ctx->buf,*(uint64_t*)ctx->buf);	
     if(use_event){
 		//确认cqe
 		ibv_ack_cq_events(ctx->cq,num_cq_events);

@@ -237,6 +237,7 @@ int post_send(struct pingpong_context *ctx,int imm_flag,uint32_t imm_data){
         };
 
 		if(imm_flag){
+			send_wr.wr_id = SEND_IMMDT_WRID;
 			send_wr.opcode = IBV_WR_SEND_WITH_IMM;
 			send_wr.imm_data = htonl(imm_data);
 		}
@@ -267,6 +268,7 @@ int post_write(struct pingpong_context *ctx,struct pingpong_dest *rem_dest,int i
         };
 
 		if(imm_flag){
+			send_wr.wr_id = WRITE_IMMDT_WRID;
 			send_wr.opcode = IBV_WR_RDMA_WRITE_WITH_IMM;
 			send_wr.imm_data = htonl(imm_data);
 		}
@@ -965,35 +967,34 @@ int handle_cqe(const struct pingpong_context *ctx,const struct ibv_wc* wc){
                 case RECV_WRID:
 				if(opcode == IBV_WC_RECV_RDMA_WITH_IMM || opcode == IBV_WC_RECV){//imm_data at reciver
                     //获取imma_data
-                    uint32_t imm_data = ntohl(wc->imm_data);
-                    printMsg("Server receive immdt_data:%d\n",imm_data);
-					//打印数据
-					printMsg("Server receive data :%s\n",(char *)ctx->buf);
-                }
+					if(wc->imm_data != 0){
+                    	printMsg("Server receive immdt_data:%d\n",ntohl(wc->imm_data));
+					}
+				}
+				printMsg("Server has completed recv request\n");
                 break;
 				//client
 				case SEND_IMMDT_WRID:
 				case SEND_WRID:
-				printMsg("Client completes send request\n");
+				printMsg("Client has completed send request\n");
 				break;
 				
 				case WRITE_IMMDT_WRID:
                 case WRITE_WRID:
-				printMsg("Client completes write request\n");
+				printMsg("Client has completed write request\n");
 				break;
 
 			    case READ_WRID:
 				printMsg("Client receive data:%s \n",(char *)ctx->buf);
-				printMsg("Client completes read request\n");
+				printMsg("Client has completed read request\n");
 				break;
 
 				case ATOMIC_COMSWAP_WRID:
 				case ATOMIC_FETCHADD_WRID:
 				//打印atomic数据
 				printMsg("Server memory original data:%ld\n",*(uint64_t *)ctx->buf);
-				printMsg("Client completes atomic request\n");
+				printMsg("Client has completed atomic request\n");
 				break;
-
 				default:
 				 fprintf(stderr,"Unknown wr_id error\n");
 				 return -1;

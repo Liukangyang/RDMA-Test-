@@ -39,9 +39,11 @@ static void usage(const char *argv0)
 	printf("  -g, --gid-idx=<gid index> local port gid index\n");
 	printf("  -o, --odp		    use on demand paging\n");
 	printf("  -t, --ts	            get CQE with timestamp\n");
-	printf("  -c, --client	        whether client or server\n");
     printf("  -a, --address=<ip-addr>	 server ip address\n");
 	printf("  -I  --Immdt=<immdt-data>     immdt data\n");
+	printf("  -T  --type=<ops_type>    operation type at client side\n");
+    printf("  -C, --atomic_comp_data=<data>	 compare/add data\n");
+    printf("  -S, --atomic_swap_data=<data>	 swap data\n");
     printf("  -h, --help   	         display help information\n");
     printf("==================================================================\n");
 }
@@ -86,13 +88,13 @@ int main(int argc, char *argv[]){
 	uint64_t Swap_data = 4321;
 
     /*支持的请求类型
-    0:send
-    1:send_immdt
-    2:write
-    3:write_immdt
-    4:read
-    5:atomic_compswap
-    6:atomic_fetchadd
+    1:send
+    2:send_immdt
+    3:write
+    4:write_immdt
+    5:read
+    6:atomic_compswap
+    7:atomic_fetchadd
     */
     int ops_type = -1;
 
@@ -289,7 +291,7 @@ int main(int argc, char *argv[]){
 	printf("  local address:  LID 0x%04x, QPN 0x%06x, PSN 0x%06x, GID %s,addr 0x%08x,rkey 0x%06x\n",
 	       my_dest.lid, my_dest.qpn, my_dest.psn, gid , my_dest.buf_addr,my_dest.buf_rkey);
 
-    //3.socket建链（client）
+    //3.socket建链(client)
     rem_dest = client_exch_dest_unidirect(servername,port,&my_dest);    
 
     if(!rem_dest){
@@ -339,8 +341,10 @@ int main(int argc, char *argv[]){
         ret = post_read(ctx,rem_dest);
         break;
         case ATOMIC_COMSWAP:
+		ret = post_atomic(ctx,rem_dest,ops_type,Comp_add_data,Swap_data);
+		break;
         case ATOMIC_FETCHADD:
-        ret = post_atomic(ctx,rem_dest,ops_type,Comp_add_data,Swap_data);
+        ret = post_atomic(ctx,rem_dest,ops_type,Comp_add_data);
         break;
         default:
             fprintf(stderr,"Unknown operation type error\n");
